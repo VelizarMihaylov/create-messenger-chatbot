@@ -25,7 +25,11 @@
           "last_name",
           "profile_pic",
           "content_type",
-          "quick_reply"
+          "quick_reply",
+          "template_type",
+          "sender_action",
+          "is_reusable",
+          "quick_replies"
         ]
         }
       ],

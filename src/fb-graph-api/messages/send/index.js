@@ -1,7 +1,7 @@
 import POST from './POST'
 import isArray from 'lodash/isArray'
 import assert from 'assert'
-import { forEach } from '../../../async-fp/forEach'
+import forEach from '../../../async-fp/forEach'
 
 export const send = (messagesArray = null || [
   {

@@ -1,10 +1,12 @@
 import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
-import messengerProfileApiMiddleware from './middleware/messenger-profile-api'
-import verbotly from './chatbots/verbotly'
-import webhookGet from './middleware/webhook-get'
-import webhookPost from './middleware/webhook-post'
+import {
+  webhookGet,
+  webhookPost,
+  messengerProfileApiMiddleware
+} from 'src/middleware'
+import demoBot from 'src/chatbots'
 
 const router = new Router()
 const app = new Koa()
@@ -15,7 +17,7 @@ app
 
 router.use(bodyParser())
 
-router.post('/webhook', webhookPost(verbotly))
+router.post('/webhook', webhookPost(demoBot))
 
 router.get('/webhook', webhookGet)
 
