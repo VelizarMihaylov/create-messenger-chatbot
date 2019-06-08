@@ -1,6 +1,4 @@
-import send from '../fb-graph-api/messages/send'
-
-const webHookPost = send => chatBot => ctx => {
+const webHookPost = chatBot => ctx => {
   const { request } = ctx
   const {
     body: {
@@ -23,4 +21,4 @@ const webHookPost = send => chatBot => ctx => {
   }
 }
 
-export default webHookPost(send)
+export default webHookPost

@@ -15,7 +15,6 @@ export const sendPOST = (fetch = () => {}, url = '') => async (requestBody = {
       },
       body: JSON.stringify(requestBody)
     })
-    console.log('URL', url)
   } catch (error) {
     throw new Error(`Failed posting request ${requestBody}: ${error}`)
   }

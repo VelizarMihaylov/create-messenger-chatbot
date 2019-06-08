@@ -1,8 +1,15 @@
-import { getUserInfo } from '../index'
+import { getUserInfoDefinition } from '../index'
 
 describe('getUserInfo', () => {
   it('should return user info object', async () => {
-    const userId = '2443315192379616'
+    const webHookEvent = {
+      sender: {
+        id: '2443315192379616'
+      },
+      postback: {
+        payload: 'Get Started'
+      }
+    }
     const fetch = () => new Promise((resolve) => {
       setTimeout(() =>
         resolve({
@@ -13,8 +20,14 @@ describe('getUserInfo', () => {
           })
         }), 500)
     })
-    const result = await getUserInfo(fetch)(userId)
+    const result = await getUserInfoDefinition(fetch)(webHookEvent)
     expect(result).toEqual({
+      sender: {
+        id: '2443315192379616'
+      },
+      postback: {
+        payload: 'Get Started'
+      },
       first_name: 'Velizar',
       second_name: 'Mihaylov',
       image: 'http/velizar/profile'

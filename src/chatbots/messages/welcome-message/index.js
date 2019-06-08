@@ -1,87 +1,53 @@
 import send from '../../../fb-graph-api/messages/send'
-import getUserInfo from '../../../fb-graph-api/user-profile'
 import { singleArgumentPipe } from '../../../async-fp/pipe'
-
-export const welcomeMessage = (getUserInfo) => async webHookEvent => {
-  if (!webHookEvent || !webHookEvent.postback) return null
-
-  const {
-    sender: {
-      id
-    },
-    postback: {
-      payload
-    }
-  } = webHookEvent
-
-  const user = await getUserInfo(id)
-
-  const firstName = user['first_name']
-  const welcomeTemplateMessage = {
-    recipient: {
-      id: id
-    },
-    message: {
-      'attachment': {
-        'type': 'image',
-        'payload': {
-          'url': 'https://www.alizila.com/wp-content/uploads/2018/08/shutterstock_677646532-992x558.jpg',
-          'is_reusable': true
-        }
-      }
-    }
-  }
-
-  const textMessage = {
-    recipient: {
-      id: id
-    },
-    message: {
-      text: `Hi ${firstName}, nice to meet you! My name is Verbotly and I am a friendly Messenger chatbot. Choose one of the below options to learn what I can do.`
-    }
-  }
-
-  const optionsMessage = {
-    recipient: {
-      id: id
-    },
-    message: {
-      attachment: {
-        type: 'template',
-        payload: {
-          template_type: 'button',
-          text: 'Available options',
-          buttons: [
-            {
-              type: 'postback',
-              title: 'What is a chatbot?',
-              payload: 'WHAT_IS_A_CHAT_BOT'
-            },
-            {
-              type: 'postback',
-              title: 'Why Verbotly?',
-              payload: 'WHY_VERBOTLY'
-            },
-            {
-              type: 'postback',
-              title: 'Speak with a human.',
-              payload: 'HOW_CHAT_BOT_CAN_HELP'
-            }
-          ]
-        }
-      }
-    }
-  }
-  if (payload !== 'Get Started') return null
-
-  const messageArray = [
-    welcomeTemplateMessage,
-    textMessage
-  ]
-  send(messageArray)
-}
+import buildMessages from '../../chatbot-api/messages/build'
+import {
+  seen,
+  typingOn,
+  typingOff,
+  textMessage,
+  optionsMessage,
+  imageMessage
+} from '../../../templates'
+import positive from '../../chatbot-api/context/positive'
+import { payloadList } from '../../config'
 
 export default webHookEvent => singleArgumentPipe(
-  welcomeMessage(getUserInfo),
+  positive(payloadList),
+  buildMessages({
+    withUserData: true,
+    messages: [
+      seen,
+      typingOn,
+      imageMessage({
+        url: 'https://www.alizila.com/wp-content/uploads/2018/08/shutterstock_677646532-992x558.jpg'
+      }),
+      textMessage({
+        text: `Hi :first_name, nice to meet you! My name is Verbotly and I am a friendly Messenger chatbot.`,
+        withUserData: true
+      }),
+      typingOn,
+      textMessage({
+        text: `I am here to let you know what services we provide at Verbotly and how we can help your business.`
+      }),
+      typingOn,
+      textMessage({
+        text: `Please use the prompts, or if you get stuck, click the menu icon at the side to navigate trough the available options. Choose "Speak with a human" if you'd like to chat with a real person.`
+      }),
+      typingOn,
+      optionsMessage({
+        text: `Does that sound good to you :first_name?`,
+        buttons: [
+          {
+            type: 'postback',
+            title: 'Sure lets do this 👍',
+            payload: 'AGREE_GET_STARTED'
+          }
+        ],
+        withUserData: true
+      }),
+      typingOff
+    ]
+  }),
   send
 )(webHookEvent)
