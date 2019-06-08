@@ -41,11 +41,29 @@
 
 import send from '../../../fb-graph-api/messages/send'
 import { singleArgumentPipe } from '../../../async-fp/pipe'
-import getContext from './context'
 import buildMessages from './build-messages.js'
+import negative from '../../chatbot-api/context/negative'
+import { payloadList } from '../../config'
+import build from '../../chatbot-api/messages/build'
+import {
+  seen,
+  typingOn,
+  typingOff,
+  textMessage
+} from '../../../templates'
 
 export default webHookEvent => singleArgumentPipe(
-  getContext,
-  buildMessages,
+  negative(payloadList),
+  build({
+    withUserData: true,
+    messages: [
+      seen,
+      typingOn,
+      textMessage({
+        text: `Sorry :first_name I did not catch that. Please keep in mind that I am an a machine and I can only do what I am programmed to do.`
+      }),
+      typingOff
+    ]
+  }),
   send
 )(webHookEvent)

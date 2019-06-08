@@ -1,3 +1,6 @@
+import getPayload from '../../../chatbot-api/payload/get'
+import { payloadList } from '../../../config'
+
 const getContext = (userInfo = {
   sender: {
     id: ''
@@ -14,7 +17,7 @@ const getContext = (userInfo = {
     }
   } = userInfo
 
-  if (payload !== 'AGREE_GET_STARTED') return null
+  if (!getPayload(payloadList, payload)) return null
 
   return userInfo
 }

@@ -1,21 +1,22 @@
 import assert from 'assert'
 import isString from 'lodash/isString'
+import buildMessageText from './helpers/build-message-text'
 
-export const seen = (id = '') => ({
+export const seen = (id) => ({
   recipient: {
     id: id
   },
   sender_action: 'mark_seen'
 })
 
-export const typingOn = (id = '') => ({
+export const typingOn = (id) => ({
   recipient: {
     id: id
   },
   sender_action: 'typing_on'
 })
 
-export const typingOff = (id = '') => ({
+export const typingOff = (id) => ({
   recipient: {
     id: id
   },
@@ -23,10 +24,9 @@ export const typingOff = (id = '') => ({
 })
 
 export const imageMessage = ({
-  id = '',
   url = '',
   isReusable = true
-}) => ({
+}) => (id) => ({
   recipient: {
     id: id
   },
@@ -41,20 +41,22 @@ export const imageMessage = ({
   }
 })
 
-export const textMessage = ({
-  id = '',
-  text = ''
-}) => ({
-  recipient: {
-    id
-  },
-  message: {
+export const textMessage = (
+  {
     text
   }
-})
+) => async (id, user) => {
+  return {
+    recipient: {
+      id
+    },
+    message: {
+      text: await buildMessageText({ text, user })
+    }
+  }
+}
 
 export const optionsMessage = ({
-  id = '',
   text = '',
   buttons = [
     {
@@ -63,7 +65,7 @@ export const optionsMessage = ({
       payload: ''
     }
   ]
-}) => ({
+}) => (id, user) => ({
   recipient: {
     id: id
   },
@@ -72,7 +74,7 @@ export const optionsMessage = ({
       type: 'template',
       payload: {
         template_type: 'button',
-        text: text,
+        text: buildMessageText({ text, user }),
         buttons: buttons
       }
     }

@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "make": "rm -rf ./lib && babel ./src --out-dir ./lib --ignore __tests__",
+    "make": "rm -rf ./lib && babel ./src --out-dir ./lib --ignore */**/__tests__",
     "test:unit": "jest --config jest.unit.config.js --watchAll",
     "test:integration": "jest --config ./integration/jest.config.js --watchAll",
     "start:dev": "concurrently \"yarn make --watch\" \"nodemon --exec 'node -r dotenv/config' ./lib/app dotenv_config_path=./.env\"",
