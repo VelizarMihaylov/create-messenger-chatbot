@@ -1,3 +1,4 @@
 export const payloadList = [
-  'GET_STARTED'
+  'GET_STARTED',
+  'TALK'
 ]

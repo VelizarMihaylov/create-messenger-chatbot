@@ -3,7 +3,7 @@ import getUserInfo from '../../fb-graph-api/user-profile'
 export const buildDefinition = getUserInfo => ({
   withUserData = false,
   messages = [(id = '') => ({})]
-}) => async (webHookEvent) => {
+}) => async (webHookEvent, setSenderId) => {
   if (!webHookEvent) return null
 
   const {

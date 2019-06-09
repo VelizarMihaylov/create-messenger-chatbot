@@ -7,11 +7,12 @@ import {
   optionsMessage,
   imageMessage
 } from 'src/chatbots-api/messages/templates'
-import { payloadList } from 'src/chatbots/config'
+import { payloadList } from 'src/chatbots/demo-bot/config'
 
 const welcome = message({
   context: 'positive',
   payloadList,
+  messagePayload: 'GET_STARTED',
   withUserData: true,
   messages: [
     seen,
